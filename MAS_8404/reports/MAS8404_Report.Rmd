@@ -11,7 +11,27 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
-library(knitr)
+library(mlbench)
+
+## Load the data
+data(BreastCancer)
+
+## Removing NA not replacing with Mode/Median
+no_NA <- drop_na(BreastCancer)
+
+## Removing ID column
+no_NA <- no_NA[,-1]
+
+no_NA <- no_NA[,-10]
+
+## Turn data frame to matrix
+mBC <- data.matrix(no_NA, rownames.force=NA)
+
+## PCA on data
+(pca1 = prcomp(x=mBC))
+
+## PCA for scales
+(pca2 = prcomp(x=mBC, scale =TRUE ))
 ```
 
 ## Aim and Objective
@@ -90,26 +110,6 @@ As part of the initial exploratory data analysis, the variance of the data was c
 Secondly the correlation between data was also calculated which showed that the highest correlation between variables are cell size and cell shape. Once again this would make sense as one would assume that as the cell size increases, so would the cell shape. From the calculations, the cluster thickness also had a high correlation between the cell size and shape which would suggest that there is a linearity in the data between these three variables.
 
 ```{r echo=FALSE}
-## Load mlbench package
-library(mlbench)
-## Load the data
-data(BreastCancer)
-
-library(tidyverse)
-
-## Removing NA not replacing with Mode/Median
-no_NA <- drop_na(BreastCancer)
-
-## Removing ID column
-no_NA <- no_NA[,-1]
-
-no_NA <- no_NA[,-10]
-
-## Turn data frame to matrix
-mBC <- data.matrix(no_NA, rownames.force=NA)
-
-## PCA on data
-(pca1 = prcomp(x=mBC))
 
 summary(pca1)
 
@@ -118,17 +118,17 @@ plot(pca1, type="lines",main="")
 title(xlab="Component Number")
 
 
-## PCA for scales
-(pca2 = prcomp(x=mBC, scale =TRUE ))
-
 summary(pca2)
 
 ## Scree diagram for PCA2
 plot(pca2, type="lines",main="")
 title(xlab="Component Number")
+
+pca_mBC = prcomp(x=mBC)
+plot(pca_mBC$x[,1],pca_mBC$x[,2], xlab = "First PC", ylab = "Second PC")
 ```
 
 
-PCA and graph
+For this exploration, we have chosen to reduce the dimensions of the data to where the principle components cover at least 80% of the variations. The principle component summaries above show that, for bother the raw data and the scaled data, the third principle component captures >80% of the variation. 
 
 
