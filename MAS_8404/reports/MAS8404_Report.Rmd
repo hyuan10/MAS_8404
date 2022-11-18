@@ -125,7 +125,13 @@ plot(pca2, type="lines",main="")
 title(xlab="Component Number")
 
 pca_mBC = prcomp(x=mBC)
-plot(pca_mBC$x[,1],pca_mBC$x[,2], xlab = "First PC", ylab = "Second PC")
+
+km = kmeans(mBC, 3, iter.max = 50, nstart = 20)
+
+plot(pca_mBC$x[,1],pca_mBC$x[,2], xlab = "First PC", ylab = "Second PC", col=km$cluster, pch=km$cluster)
+text(pca_mBC$x[,1],pca_mBC$x[,2], cex=0.5, pos=3)
+  
+
 ```
 
 
